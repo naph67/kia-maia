@@ -76,18 +76,36 @@
   <pre id="output"></pre>
 
   <script>
-    document.getElementById('songForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const song = {
-        title: document.getElementById('title').value.trim(),
-        lyrics: document.getElementById('lyrics').value.trim(),
-        translation: document.getElementById('translation').value.trim(),
-        background: document.getElementById('background').value.trim(),
-        iwi: document.getElementById('iwi').value.trim(),
-        tags: document.getElementById('tags').value.split(',').map(tag => tag.trim()).filter(tag => tag)
-      };
-      document.getElementById('output').textContent = JSON.stringify(song, null, 2);
-    });
-  </script>
+  document.getElementById('songForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const song = {
+      title: document.getElementById('title').value.trim(),
+      lyrics: document.getElementById('lyrics').value.trim(),
+      translation: document.getElementById('translation').value.trim(),
+      background: document.getElementById('background').value.trim(),
+      iwi: document.getElementById('iwi').value.trim(),
+      written_by: document.getElementById('writtenBy').value.trim(),
+      tags: document.getElementById('tags').value.split(',').map(tag => tag.trim()).filter(tag => tag)
+    };
+
+    try {
+      const res = await fetch('https://kia-maia.onrender.com/add-song', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(song)
+      });
+
+      const result = await res.json();
+      document.getElementById('output').textContent = result.message || 'Song added!';
+    } catch (err) {
+      console.error(err);
+      document.getElementById('output').textContent = 'Error saving song.';
+				}
+	});
+	</script>
+
 </body>
 </html>
