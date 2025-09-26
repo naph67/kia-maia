@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Song Details - Kia Māia</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1 id="song-title"></h1>
+  <h2>Lyrics</h2>
+  <p id="lyrics"></p>
+  <h2>Translation</h2>
+  <p id="translation"></p>
+  <h2>Background</h2>
+  <p id="background"></p>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get("title");
+
+    fetch("songs.json")
+      .then(res => res.json())
+      .then(data => {
+        const song = data.find(s => s.title === title);
+        if (song) {
+          document.getElementById("song-title").textContent = song.title;
+          document.getElementById("lyrics").textContent = song.lyrics;
+          document.getElementById("translation").textContent = song.translation;
+          document.getElementById("background").textContent = song.background;
+        }
+      });
+  </script>
+</body>
+</html>
